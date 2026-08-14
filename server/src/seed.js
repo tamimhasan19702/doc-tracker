@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
 import env from "./config/env.js";
 import User from "./models/User.js";
 import Doctor from "./models/Doctor.js";
@@ -118,7 +117,7 @@ async function seed() {
   await User.create({
     name: "Admin",
     email: "admin@doctor.app",
-    password: await bcrypt.hash("admin123", 10),
+    password: "admin123",
     role: "admin",
   });
   console.log("[seed] admin user -> admin@doctor.app / admin123");
