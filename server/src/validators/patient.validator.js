@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-/** Optional trimmed string; "" / undefined normalize to undefined. */
+/** Optional trimmed string */
 const optionalString = (max = 100) =>
   z
     .union([z.string().trim().max(max), z.literal("")])
