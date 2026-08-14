@@ -9,7 +9,11 @@ const env = {
     process.env.MONGODB_URI || "mongodb://localhost:27017/doctor-tracker",
   jwtSecret: process.env.JWT_SECRET || "dev_secret_change_me",
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
-  clientOrigin: process.env.CLIENT_ORIGIN || "http://localhost:3000",
+  // Comma-separated list of allowed frontend origins.
+  clientOrigin: (process.env.CLIENT_ORIGIN || "http://localhost:3000")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
 };
 
 export default env;
