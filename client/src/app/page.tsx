@@ -1,10 +1,23 @@
+"use client";
+
+import { useEffect, useSyncExternalStore } from "react";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/auth-store";
+
+const emptySubscribe = () => () => {};
+
 export default function Home() {
-  return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
-      <h1 className="text-4xl font-bold tracking-tight">Doctor Tracker</h1>
-      <p className="text-muted-foreground text-lg">
-        Manage doctors, patients, and analytics.
-      </p>
-    </main>
+  const router = useRouter();
+  const token = useAuthStore((s) => s.token);
+  const isHydrated = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
   );
+
+  useEffect(() => {
+    if (isHydrated) router.replace(token ? "/dashboard" : "/login");
+  }, [isHydrated, token, router]);
+
+  return null;
 }
