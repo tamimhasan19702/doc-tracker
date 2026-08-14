@@ -17,7 +17,6 @@ const patientSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Hot query: patients of a doctor ordered by recency.
 patientSchema.index({ doctor: 1, createdAt: -1 });
 patientSchema.index({ createdAt: -1 });
 

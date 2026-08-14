@@ -4,14 +4,14 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { getPagination, paginateResponse, toRegex } from "../utils/paginate.js";
 
-/** Throws 400 if id is not a valid ObjectId. @param {string} id */
+/** Throws 400 if id is not a valid ObjectId */
 const assertId = (id) => {
   if (!mongoose.isValidObjectId(id)) {
     throw new ApiError(400, "Invalid id format");
   }
 };
 
-/** GET /api/patients — search, filter, paginate; embeds doctor info. */
+/** search, filter, paginate; embeds doctor info. */
 export const listPatients = asyncHandler(async (req, res) => {
   const { search, condition, doctor, from, to } = req.query;
   const { page, limit, skip } = getPagination(req.query);
@@ -45,7 +45,7 @@ export const listPatients = asyncHandler(async (req, res) => {
   res.json(paginateResponse(data, page, limit, total));
 });
 
-/** GET /api/patients/:id — single patient with doctor details. */
+/** single patient with doctor details. */
 export const getPatient = asyncHandler(async (req, res) => {
   const { id } = req.params;
   assertId(id);
@@ -58,7 +58,7 @@ export const getPatient = asyncHandler(async (req, res) => {
   res.json({ success: true, data: patient });
 });
 
-/** PUT /api/patients/:id — update a patient. */
+/** update a patient. */
 export const updatePatient = asyncHandler(async (req, res) => {
   const { id } = req.params;
   assertId(id);
@@ -74,7 +74,7 @@ export const updatePatient = asyncHandler(async (req, res) => {
   res.json({ success: true, data: patient });
 });
 
-/** DELETE /api/patients/:id — remove a patient. */
+/** remove a patient. */
 export const removePatient = asyncHandler(async (req, res) => {
   const { id } = req.params;
   assertId(id);

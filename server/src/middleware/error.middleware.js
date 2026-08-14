@@ -1,4 +1,4 @@
-/** Central error handler — converts any error into { success, message, errors }. */
+/** Central error handler. */
 export const errorHandler = (err, _req, res, _next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || "Internal server error";

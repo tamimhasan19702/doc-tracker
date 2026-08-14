@@ -11,7 +11,6 @@ import { updatePatientSchema } from "../validators/patient.validator.js";
 
 const router = Router();
 
-// All patient routes require a valid JWT.
 router.use(protect);
 
 router.route("/").get(listPatients);

@@ -9,7 +9,6 @@ import { protect } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
-// Dashboard stats require authentication.
 router.use(protect);
 
 router.get("/summary", getSummary);

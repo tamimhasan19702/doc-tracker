@@ -4,7 +4,7 @@ import User from "../models/User.js";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-/** Signs a JWT for the given user. @param {import("mongoose").Document} user @returns {string} */
+/** Signs a JWT for the given user.*/
 const signToken = (user) =>
   jwt.sign(
     { sub: user._id.toString(), role: user.role },
@@ -12,7 +12,7 @@ const signToken = (user) =>
     { expiresIn: env.jwtExpiresIn }
   );
 
-/** POST /api/auth/login — verifies credentials, returns token + user. */
+/**  verifies credentials, returns token + user. */
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email }).select("+password");
@@ -36,7 +36,7 @@ export const login = asyncHandler(async (req, res) => {
   });
 });
 
-/** GET /api/auth/me — returns the current authenticated user. */
+/** returns the current authenticated user. */
 export const me = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).select("-password").lean();
   res.json({ success: true, data: user });

@@ -18,7 +18,6 @@ import { createPatientSchema } from "../validators/patient.validator.js";
 
 const router = Router();
 
-// All doctor routes require a valid JWT.
 router.use(protect);
 
 router

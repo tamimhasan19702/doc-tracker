@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
-    // select: false hides the hash by default; opt in via .select("+password")
     password: { type: String, required: true, select: false },
     role: { type: String, default: "admin" },
   },
@@ -25,7 +24,7 @@ userSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-/** Compares a plain password against the stored hash. @param {string} candidate @returns {Promise<boolean>} */
+/** Compares a plain password against the stored hash.  */
 userSchema.methods.comparePassword = function (candidate) {
   return bcrypt.compare(candidate, this.password);
 };
