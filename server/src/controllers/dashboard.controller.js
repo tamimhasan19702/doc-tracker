@@ -26,7 +26,9 @@ export const getSummary = asyncHandler(async (_req, res) => {
   });
 });
 
-/** GET /api/dashboard/patients-per-doctor — top 10 doctors by patient count. */
+/**
+ * Top 10 doctors by number of patients — feeds a bar chart.
+ */
 export const getPatientsPerDoctor = asyncHandler(async (_req, res) => {
   const data = await Patient.aggregate([
     { $group: { _id: "$doctor", count: { $sum: 1 } } },
@@ -55,7 +57,7 @@ export const getPatientsPerDoctor = asyncHandler(async (_req, res) => {
   res.json({ success: true, data });
 });
 
-/** GET /api/dashboard/trends?period=daily|weekly|monthly&from=&to= — patients vs doctors per bucket. */
+/** patients vs doctors per bucket. */
 export const getTrends = asyncHandler(async (req, res) => {
   const { from, to, period = "daily" } = req.query;
 
@@ -103,7 +105,7 @@ export const getTrends = asyncHandler(async (req, res) => {
   res.json({ success: true, data: Array.from(map.values()) });
 });
 
-/** GET /api/dashboard/conditions — patient count per condition. */
+/** patient count per condition. */
 export const getConditions = asyncHandler(async (_req, res) => {
   const data = await Patient.aggregate([
     {
