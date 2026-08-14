@@ -19,7 +19,7 @@ app.use("/api/doctors", doctorRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
-// Fallbacks: 404, then centralized error handling.
+// Fallbacks: 404
 app.use(notFound);
 app.use(errorHandler);
 
