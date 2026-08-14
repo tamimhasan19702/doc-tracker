@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, Stethoscope } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -64,11 +64,17 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex flex-1 items-center justify-center p-6">
+    <main className="relative flex flex-1 items-center justify-center overflow-hidden p-6">
+      <div className="pointer-events-none absolute -top-40 -left-40 size-96 rounded-full bg-primary/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-40 -bottom-40 size-96 rounded-full bg-primary/10 blur-3xl" />
+
       <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Doctor Tracker</CardTitle>
-          <CardDescription>Sign in to continue</CardDescription>
+        <CardHeader className="items-center text-center">
+          <div className="mb-1 flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+            <Stethoscope className="size-6" />
+          </div>
+          <CardTitle className="text-xl">Doctor Tracker</CardTitle>
+          <CardDescription>Sign in to your account to continue</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
@@ -96,6 +102,7 @@ export default function LoginPage() {
               <Input
                 id="password"
                 type="password"
+                placeholder="••••••••"
                 autoComplete="current-password"
                 aria-invalid={!!errors.password}
                 {...register("password")}
@@ -106,11 +113,14 @@ export default function LoginPage() {
                 </p>
               )}
             </div>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} className="mt-1">
               {isSubmitting && <Loader2 className="animate-spin" />}
               {isSubmitting ? "Signing in..." : "Sign in"}
             </Button>
           </form>
+          <p className="mt-4 text-center text-xs text-muted-foreground">
+            Demo: admin@doctor.app / admin123
+          </p>
         </CardContent>
       </Card>
     </main>
