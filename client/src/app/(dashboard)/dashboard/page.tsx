@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 
 export default function DashboardPage() {
   return (
-    <>
+    <div className="flex flex-1 flex-col gap-6 lg:gap-8">
       <PageHeader
         title="Dashboard"
         description="Overview of doctors and patients."
@@ -26,6 +26,6 @@ export default function DashboardPage() {
           Trends chart coming soon
         </div>
       </div>
-    </>
+    </div>
   );
 }
