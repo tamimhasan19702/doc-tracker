@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store/auth-store";
 
 export function Topbar() {
@@ -17,13 +18,18 @@ export function Topbar() {
   };
 
   return (
-    <header className="flex h-14 items-center justify-between border-b px-6">
-      <p className="text-sm text-muted-foreground">Welcome back</p>
+    <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center justify-between gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="flex items-center gap-2">
+        <SidebarTrigger className="-ml-1" />
+        <span className="text-sm text-muted-foreground">Welcome back</span>
+      </div>
       <div className="flex items-center gap-3">
-        <span className="text-sm font-medium">{user?.name ?? "Admin"}</span>
+        <span className="hidden text-sm font-medium sm:inline">
+          {user?.name ?? "Admin"}
+        </span>
         <Button variant="outline" size="sm" onClick={handleLogout}>
           <LogOut />
-          Logout
+          <span className="hidden sm:inline">Logout</span>
         </Button>
       </div>
     </header>
