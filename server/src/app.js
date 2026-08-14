@@ -13,11 +13,6 @@ const app = express();
 app.use(cors({ origin: env.clientOrigin, credentials: true }));
 app.use(express.json());
 
-/** Health check for smoke tests and uptime monitors. */
-app.get("/api/health", (_req, res) => {
-  res.json({ success: true, data: { status: "ok" } });
-});
-
 // API route groups.
 app.use("/api/auth", authRoutes);
 app.use("/api/doctors", doctorRoutes);
