@@ -1,17 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Loader2 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import apiClient from "@/lib/api-client";
 import { useAuthStore, type AuthUser } from "@/store/auth-store";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const loginSchema = z.object({
   email: z.email("Enter a valid email"),
@@ -91,7 +90,7 @@ export function LoginForm() {
         {isSubmitting ? "Signing in..." : "Sign in"}
       </Button>
       <p className="text-center text-xs text-muted-foreground">
-        Demo: admin@doctor.app / admin123
+        Use the following credentials: admin@doctor.app / admin123
       </p>
     </form>
   );

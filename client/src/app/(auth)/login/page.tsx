@@ -18,7 +18,11 @@ export default function LoginPage() {
 
   return (
     <main className="relative flex flex-1 items-center justify-center overflow-hidden p-6">
+
+      {/* Background elements */}
       <div className="pointer-events-none absolute -top-40 -left-40 size-96 rounded-full bg-primary/10 blur-3xl" />
+
+        {/* Background elements */}
       <div className="pointer-events-none absolute -right-40 -bottom-40 size-96 rounded-full bg-primary/10 blur-3xl" />
 
       <Card className="w-full max-w-sm">
