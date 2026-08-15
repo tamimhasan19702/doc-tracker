@@ -32,11 +32,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { formatDate } from "@/lib/format";
 import { useDoctorDetailStore } from "@/store/doctor-detail-store";
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString();
-}
 
 export function DoctorDetail() {
   const { id } = useParams<{ id: string }>();

@@ -4,18 +4,13 @@ import { create } from "zustand";
 import { toast } from "sonner";
 
 import apiClient from "@/lib/api-client";
+import { apiErrorMessage } from "@/lib/api-error";
 import type {
   ApiResponse,
   Paginated,
   Patient,
   PatientsState,
 } from "@/types";
-
-function errorMessage(err: unknown, fallback: string): string {
-  const data = (err as { response?: { data?: { message?: string } } })
-    ?.response?.data;
-  return data?.message ?? fallback;
-}
 
 export const usePatientsStore = create<PatientsState>((set, get) => ({
   filters: { search: "", condition: "" },
@@ -57,13 +52,18 @@ export const usePatientsStore = create<PatientsState>((set, get) => ({
           limit,
         },
       });
+      const totalPages = Math.max(data.totalPages, 1);
       set({
         patients: data.data,
         total: data.total,
-        totalPages: data.totalPages,
+        totalPages,
       });
+      if (page > totalPages) {
+        get().setPage(totalPages);
+        return;
+      }
     } catch (err) {
-      set({ error: errorMessage(err, "Failed to load patients") });
+      set({ error: apiErrorMessage(err, "Failed to load patients") });
     } finally {
       set({ loading: false });
     }
@@ -78,7 +78,7 @@ export const usePatientsStore = create<PatientsState>((set, get) => ({
       toast.success(`Patient ${data.data.name} created`);
       get().fetchPatients();
     } catch (err) {
-      toast.error(errorMessage(err, "Failed to create patient"));
+      toast.error(apiErrorMessage(err, "Failed to create patient"));
       throw err;
     }
   },
@@ -92,7 +92,7 @@ export const usePatientsStore = create<PatientsState>((set, get) => ({
       toast.success(`Patient ${data.data.name} updated`);
       get().fetchPatients();
     } catch (err) {
-      toast.error(errorMessage(err, "Failed to update patient"));
+      toast.error(apiErrorMessage(err, "Failed to update patient"));
       throw err;
     }
   },
@@ -105,7 +105,7 @@ export const usePatientsStore = create<PatientsState>((set, get) => ({
       toast.success(`Patient ${data.data.name} deleted`);
       get().fetchPatients();
     } catch (err) {
-      toast.error(errorMessage(err, "Failed to delete patient"));
+      toast.error(apiErrorMessage(err, "Failed to delete patient"));
       throw err;
     }
   },

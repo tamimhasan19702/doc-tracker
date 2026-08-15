@@ -89,10 +89,31 @@ export function PatientFormModal() {
             ? editingPatient.doctor
             : editingPatient?.doctor?._id ?? "",
       });
-      apiClient
-        .get<Paginated<Doctor>>("/doctors", { params: { limit: 100 } })
-        .then(({ data }) => setDoctors(data.data))
-        .catch(() => setDoctors([]));
+
+      let cancelled = false;
+      async function loadDoctors() {
+        try {
+          const all: Doctor[] = [];
+          const first = await apiClient.get<Paginated<Doctor>>("/doctors", {
+            params: { page: 1, limit: 100 },
+          });
+          all.push(...first.data.data);
+          for (let page = 2; page <= first.data.totalPages && !cancelled; page++) {
+            const { data } = await apiClient.get<Paginated<Doctor>>(
+              "/doctors",
+              { params: { page, limit: 100 } }
+            );
+            all.push(...data.data);
+          }
+          if (!cancelled) setDoctors(all);
+        } catch {
+          if (!cancelled) setDoctors([]);
+        }
+      }
+      void loadDoctors();
+      return () => {
+        cancelled = true;
+      };
     }
   }, [modalOpen, editingPatient, reset]);
 

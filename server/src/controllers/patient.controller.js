@@ -1,15 +1,12 @@
-import mongoose from "mongoose";
+import Doctor from "../models/Doctor.js";
 import Patient from "../models/Patient.js";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { getPagination, paginateResponse, toRegex } from "../utils/paginate.js";
+import { assertId } from "../utils/validateId.js";
 
-/** Throws 400 if id is not a valid ObjectId */
-const assertId = (id) => {
-  if (!mongoose.isValidObjectId(id)) {
-    throw new ApiError(400, "Invalid id format");
-  }
-};
+/** Keys whose "" / undefined value should remove the stored field on update. */
+const CLEARABLE_FIELDS = ["age", "gender", "condition", "phone"];
 
 /** search, filter, paginate; embeds doctor info. */
 export const listPatients = asyncHandler(async (req, res) => {
@@ -64,7 +61,35 @@ export const updatePatient = asyncHandler(async (req, res) => {
   const { id } = req.params;
   assertId(id);
 
-  const patient = await Patient.findByIdAndUpdate(id, req.body, {
+  const body = { ...req.body };
+  const { doctor } = body;
+  if (doctor) {
+    assertId(doctor);
+    const assigned = await Doctor.findById(doctor).lean();
+    if (!assigned) throw new ApiError(400, "Assigned doctor not found");
+  }
+
+  const unset = {};
+  for (const key of CLEARABLE_FIELDS) {
+    if (body[key] === undefined) {
+      unset[key] = 1;
+      delete body[key];
+    }
+  }
+
+  const update = {};
+  if (Object.keys(body).length) update.$set = body;
+  if (Object.keys(unset).length) update.$unset = unset;
+
+  if (Object.keys(update).length === 0) {
+    const current = await Patient.findById(id)
+      .populate("doctor", "name specialization")
+      .lean();
+    if (!current) throw new ApiError(404, "Patient not found");
+    return res.json({ success: true, data: current });
+  }
+
+  const patient = await Patient.findByIdAndUpdate(id, update, {
     new: true,
     runValidators: true,
   })
