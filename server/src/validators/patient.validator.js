@@ -7,6 +7,10 @@ const optionalString = (max = 100) =>
     .optional()
     .transform((v) => (v === "" || v === undefined ? undefined : v));
 
+/** MongoDB ObjectId reference to a Doctor. */
+const doctorId = () =>
+  z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid doctor id");
+
 /** Create patient payload. */
 export const createPatientSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -20,6 +24,7 @@ export const createPatientSchema = z.object({
     .transform((v) => (v === "" || v === undefined ? undefined : v)),
   condition: optionalString(),
   phone: optionalString(30),
+  doctor: doctorId().optional(),
 });
 
 /** Updates allow any subset of create fields. */
