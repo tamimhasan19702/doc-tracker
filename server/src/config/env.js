@@ -4,7 +4,7 @@ dotenv.config();
 
 /** Centralized env access with safe local-development defaults. */
 const env = {
-  port: parseInt(process.env.PORT || "5000", 10),
+  port: parseInt(process.env.PORT, 10) || 5000,
   mongodbUri:
     process.env.MONGODB_URI || "mongodb://localhost:27017/doctor-tracker",
   jwtSecret: process.env.JWT_SECRET || "dev_secret_change_me",
