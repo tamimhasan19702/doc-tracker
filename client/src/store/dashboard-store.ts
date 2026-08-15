@@ -1,21 +1,15 @@
 import { create } from "zustand";
 
 import apiClient from "@/lib/api-client";
+import { apiErrorMessage } from "@/lib/api-error";
 import type {
   ApiResponse,
   ConditionCount,
   DashboardState,
   DashboardSummary,
   DoctorPatientCount,
-  TrendPeriod,
   TrendPoint,
 } from "@/types";
-
-function errorMessage(err: unknown, fallback: string): string {
-  const data = (err as { response?: { data?: { message?: string } } })
-    ?.response?.data;
-  return data?.message ?? fallback;
-}
 
 export const useDashboardStore = create<DashboardState>((set, get) => ({
   summary: null,
@@ -38,7 +32,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       );
       set({ summary: data.data });
     } catch (err) {
-      set({ error: errorMessage(err, "Failed to load summary") });
+      set({ error: apiErrorMessage(err, "Failed to load summary") });
     }
   },
 
@@ -49,7 +43,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       >("/dashboard/patients-per-doctor");
       set({ patientsPerDoctor: data.data });
     } catch (err) {
-      set({ error: errorMessage(err, "Failed to load patients per doctor") });
+      set({ error: apiErrorMessage(err, "Failed to load patients per doctor") });
     }
   },
 
@@ -62,7 +56,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       );
       set({ trends: data.data });
     } catch (err) {
-      set({ error: errorMessage(err, "Failed to load trends") });
+      set({ error: apiErrorMessage(err, "Failed to load trends") });
     }
   },
 
@@ -73,7 +67,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       );
       set({ conditions: data.data });
     } catch (err) {
-      set({ error: errorMessage(err, "Failed to load conditions") });
+      set({ error: apiErrorMessage(err, "Failed to load conditions") });
     }
   },
 

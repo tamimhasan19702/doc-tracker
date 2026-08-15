@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import apiClient from "@/lib/api-client";
+import { apiErrorMessage } from "@/lib/api-error";
 import { useAuthStore } from "@/store/auth-store";
 import type { AuthUser } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,10 +45,7 @@ export function LoginForm() {
       setSession(data.data.token, data.data.user);
       router.replace("/dashboard");
     } catch (err) {
-      const message =
-        (err as { response?: { data?: { message?: string } } }).response?.data
-          ?.message ?? "Login failed. Please try again.";
-      setError(message);
+      setError(apiErrorMessage(err, "Login failed. Please try again."));
     }
   };
 

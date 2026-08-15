@@ -20,14 +20,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatDate } from "@/lib/format";
 import type { Patient, PatientDoctor } from "@/types";
 
 function doctorName(doctor: string | PatientDoctor): string {
   return typeof doctor === "string" ? doctor : doctor.name;
-}
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString();
 }
 
 function TableSkeleton() {

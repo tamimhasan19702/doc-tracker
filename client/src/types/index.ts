@@ -10,7 +10,7 @@ export interface AuthState {
   user: AuthUser | null;
   setSession: (token: string, user: AuthUser) => void;
   clearSession: () => void;
-};
+}
 
 export interface Doctor {
   _id: string;
