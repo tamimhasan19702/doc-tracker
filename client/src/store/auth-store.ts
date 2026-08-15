@@ -2,20 +2,7 @@
 
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-
-export type AuthUser = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-};
-
-type AuthState = {
-  token: string | null;
-  user: AuthUser | null;
-  setSession: (token: string, user: AuthUser) => void;
-  clearSession: () => void;
-};
+import type { AuthState} from "@/types";
 
 export const useAuthStore = create<AuthState>()(
   persist(

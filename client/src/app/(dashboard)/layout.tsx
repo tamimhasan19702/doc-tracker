@@ -15,6 +15,8 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const token = useAuthStore((s) => s.token);
+
+  // Wait for client hydration before checking auth and redirecting.
   const isHydrated = useSyncExternalStore(
     emptySubscribe,
     () => true,

@@ -21,7 +21,7 @@ Seed credentials: `admin@doctor.app` / `admin123`
 
 ## API
 
-All routes except `/api/auth/login` and `/api/health` require `Authorization: Bearer <token>`.
+All routes except `/api/auth/login` require `Authorization: Bearer <token>`.
 
 - `POST /api/auth/login` — login, returns JWT
 - `GET  /api/auth/me` — current user

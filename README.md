@@ -1,22 +1,35 @@
 # Doctor Tracker
 
-A doctor & patient management dashboard — manage doctors, patients, and analytics.
+A simple app to manage doctors and patients in a clinic. Add doctors, add patients, and see charts showing how many patients each doctor has, patient conditions, and trends over time.
 
-**Architecture:** Next.js frontend (`client/`) + Express backend (`server/`) + MongoDB (Mongoose). JWT auth, Recharts dashboard, shadcn/ui design system.
+## What's inside
 
-## Repos / Structure
+The project has two parts:
 
-- `client/` — Next.js 16 (App Router, Tailwind v4, shadcn/ui, React Query, Zustand)
-- `server/` — Express REST API (Mongoose, JWT, Zod)
-- `project-plan.md` — full project plan and API design
+- **App** — the screens you see in your browser (`client/`)
+- **Server** — keeps all the data in a database (`server/`)
 
-## Quick Start
+## How to run it
 
-> Full setup guides live in each folder's README.
+You need [Node.js](https://nodejs.org) and [MongoDB](https://www.mongodb.com) (or Docker) installed.
 
-1. Start MongoDB: `docker compose up -d`
-2. Backend: `cd server && pnpm install && pnpm dev` (port 5000)
-3. Frontend: `cd client && pnpm install && pnpm dev` (port 3000)
-4. Seed data: `cd server && pnpm seed` (admin: `admin@doctor.app` / `admin123`)
+1. Start MongoDB
+2. Start the server: `cd server`, then `pnpm install` and `pnpm dev`
+3. Start the app: `cd client`, then `pnpm install` and `pnpm dev`
+4. Open http://localhost:3000/login and sign in
 
-Login at http://localhost:3000/login
+**Demo login:** `admin@doctor.app` / `admin123`
+
+To fill the app with sample data, run `pnpm seed` inside the `server` folder.
+
+## Features
+
+- Secure login
+- Add, edit and delete doctors and patients
+- Search and filter the lists
+- Dashboard with charts (patients per doctor, conditions, trends over time)
+
+## Tech
+
+- Next.js frontend + Express backend + MongoDB
+- Charts with Recharts, UI with shadcn/ui
