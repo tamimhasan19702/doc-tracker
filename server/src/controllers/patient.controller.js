@@ -21,7 +21,8 @@ export const listPatients = asyncHandler(async (req, res) => {
   if (searchRx) {
     filter.$or = [{ name: searchRx }, { phone: searchRx }];
   }
-  if (condition) filter.condition = condition;
+  const conditionRx = toRegex(condition);
+  if (conditionRx) filter.condition = conditionRx;
   if (doctor) {
     assertId(doctor);
     filter.doctor = doctor;

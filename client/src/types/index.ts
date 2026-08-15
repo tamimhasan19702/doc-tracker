@@ -73,6 +73,13 @@ export interface DoctorsState {
   deleteDoctor: (id: string) => Promise<void>;
 };
 
+/** Populated doctor reference returned by patient endpoints. */
+export interface PatientDoctor {
+  _id: string;
+  name: string;
+  specialization?: string;
+}
+
 export interface Patient {
   _id: string;
   name: string;
@@ -80,9 +87,47 @@ export interface Patient {
   gender?: "male" | "female" | "other";
   condition?: string;
   phone?: string;
-  doctor: string;
+  /** ObjectId string on unpopulated responses, populated object on the list/detail endpoints. */
+  doctor: string | PatientDoctor;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface PatientInput {
+  name: string;
+  age?: number | "";
+  gender?: "male" | "female" | "other" | "";
+  condition?: string;
+  phone?: string;
+  doctor: string;
+}
+
+export interface PatientsFilters {
+  search: string;
+  condition: string;
+}
+
+export interface PatientsState {
+  filters: PatientsFilters;
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  patients: Patient[];
+  loading: boolean;
+  error: string | null;
+  modalOpen: boolean;
+  editingPatient: Patient | null;
+  setFilters: (patch: Partial<PatientsFilters>) => void;
+  resetFilters: () => void;
+  setPage: (page: number) => void;
+  openCreate: () => void;
+  openEdit: (patient: Patient) => void;
+  closeModal: () => void;
+  fetchPatients: () => Promise<void>;
+  createPatient: (input: PatientInput) => Promise<void>;
+  updatePatient: (id: string, input: PatientInput) => Promise<void>;
+  deletePatient: (id: string) => Promise<void>;
 }
 
 export interface ApiResponse<T> {
@@ -103,4 +148,51 @@ export interface DoctorsFilters {
   search: string;
   specialization: string;
   hospital: string;
+}
+
+/** Headline stats for the dashboard stat cards. */
+export interface DashboardSummary {
+  totalDoctors: number;
+  totalPatients: number;
+  newPatientsThisMonth: number;
+  avgPerDoctor: number;
+}
+
+/** One row from /dashboard/patients-per-doctor. */
+export interface DoctorPatientCount {
+  doctorId: string;
+  name: string | null;
+  specialization?: string | null;
+  count: number;
+}
+
+export type TrendPeriod = "daily" | "weekly" | "monthly";
+
+/** One row from /dashboard/trends. */
+export interface TrendPoint {
+  date: string;
+  patients: number;
+  doctors: number;
+}
+
+/** One slice from /dashboard/conditions (for a donut chart). */
+export interface ConditionCount {
+  name: string;
+  value: number;
+}
+
+export interface DashboardState {
+  summary: DashboardSummary | null;
+  patientsPerDoctor: DoctorPatientCount[];
+  trends: TrendPoint[];
+  conditions: ConditionCount[];
+  period: TrendPeriod;
+  loading: boolean;
+  error: string | null;
+  setPeriod: (period: TrendPeriod) => void;
+  fetchSummary: () => Promise<void>;
+  fetchPatientsPerDoctor: () => Promise<void>;
+  fetchTrends: () => Promise<void>;
+  fetchConditions: () => Promise<void>;
+  fetchAll: () => Promise<void>;
 }
