@@ -3,7 +3,10 @@ import { useAuthStore } from "@/store/auth-store";
 
 /** Shared axios instance pointing at the REST API. */
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api",
+  baseURL: (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api").replace(
+    /\/$/,
+    ""
+  ),
 });
 
 /** Attaches the stored JWT as `Authorization: Bearer <token>` on every request. */
