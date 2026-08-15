@@ -37,8 +37,10 @@ export const listDoctors = asyncHandler(async (req, res) => {
       { phone: searchRx },
     ];
   }
-  if (specialization) filter.specialization = specialization;
-  if (hospital) filter.hospital = hospital;
+  const specializationRx = toRegex(specialization);
+  if (specializationRx) filter.specialization = specializationRx;
+  const hospitalRx = toRegex(hospital);
+  if (hospitalRx) filter.hospital = hospitalRx;
   Object.assign(filter, dateFilter(from, to));
 
   const [data, total] = await Promise.all([
