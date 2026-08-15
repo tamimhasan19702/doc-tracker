@@ -2,6 +2,13 @@
 
 A doctor and patient management dashboard. It allows adding, editing and deleting doctors and patients, searching and filtering the lists, and reviewing analytics through charts.
 
+## Live demo
+
+- **Frontend:** https://doc-tracker-kappa.vercel.app/
+- **Backend API:** https://doc-tracker-5dw7.onrender.com
+
+**Demo login:** `admin@doctor.app` / `admin123`
+
 ## Components
 
 The project is split into two applications that communicate over a REST API:
