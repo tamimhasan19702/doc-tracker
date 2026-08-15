@@ -1,47 +1,35 @@
 # Doctor Tracker
 
-A simple app to manage doctors and patients in a clinic. Add doctors, add patients, and see charts showing how many patients each doctor has, patient conditions, and trends over time.
+A doctor and patient management dashboard. It allows adding, editing and deleting doctors and patients, searching and filtering the lists, and reviewing analytics through charts.
 
-## What's inside
+## Components
 
-The project has two parts that work together:
+The project is split into two applications that communicate over a REST API:
 
-- **App** — the screens you see in your browser (`client/`)
-- **Server** — keeps all the data safe in a database (`server/`)
+- **App** — the frontend UI, built with Next.js and served on port 3000 (`client/`)
+- **Server** — the Express REST API and data layer, served on port 5000 (`server/`)
 
 ## How it works (architecture)
 
-```
-  You (browser)
-       │
-       ▼
-  App (Next.js, port 3000)   ← the screens you see
-       │  sends requests over the internet (REST API)
-       ▼
-  Server (Express, port 5000)  ← the brain: checks who you are,
-       │                          saves/finds/updates data
-       ▼
-  MongoDB                       ← the filing cabinet where all
-                                  data actually lives
-```
+The frontend and backend are fully separated:
 
-**Plain-language version:** the app is like a front desk. When you click "Add patient" in your browser, the app doesn't save anything itself — it hands the request to the server, the server checks that you're logged in, files the record in the database, and sends a confirmation back to the app. The same flow works backwards: to show a list, the app asks the server to fetch records from the database.
+- The browser never talks to MongoDB directly. All data access goes through the Express server, which is the only component allowed to read and write the database.
+- Every request to a protected endpoint must include a JWT in the `Authorization` header. The server verifies the token before serving any data.
+- The frontend stores the JWT in localStorage after login and attaches it automatically to every request via an axios interceptor.
+- The backend uses Mongoose models with defined schemas, Zod validators on request bodies, and a centralized error handler that returns a consistent error shape.
+- Dashboard stats (totals, per-doctor counts, trends, condition distribution) are pre-aggregated in MongoDB using aggregation pipelines — no client-side computation.
 
-This separation means:
-
-- Your browser never touches the database directly — the server is the only thing allowed to.
-- The app and server can run (and be upgraded) independently of each other.
-- The server is the single place that decides who can do what.
+This separation allows the frontend and server to run and be deployed independently, and keeps a single, central place where access is authorized.
 
 ## Security
 
-- You must log in with an email and password; the password is stored as an unreadable hash, not plain text.
-- The server gives you a secret "key" (a JWT token) after login, and the app sends it with every request. Without a valid key, the server refuses to do anything.
-- Logging out simply throws that key away.
+- Login uses email + password; passwords are stored as bcrypt hashes, never plain text.
+- On successful login the server signs a JWT (7-day expiry) which the app sends as `Authorization: Bearer <token>`.
+- Unauthenticated requests receive a 401 and the app clears the session and redirects to the login page.
 
 ## How to run it
 
-You need [Node.js](https://nodejs.org) and [MongoDB](https://www.mongodb.com) (or Docker) installed.
+Requires [Node.js](https://nodejs.org) and [MongoDB](https://www.mongodb.com) (or Docker).
 
 1. Start MongoDB
 2. Start the server: `cd server`, then `pnpm install` and `pnpm dev`
@@ -50,20 +38,18 @@ You need [Node.js](https://nodejs.org) and [MongoDB](https://www.mongodb.com) (o
 
 **Demo login:** `admin@doctor.app` / `admin123`
 
-To fill the app with sample data, run `pnpm seed` inside the `server` folder.
+To fill the app with sample data, run `pnpm seed` inside the `server` folder (creates an admin user, 10 doctors and 30 patients).
 
 ## Features
 
-- Secure login
-- Add, edit and delete doctors and patients
-- Search and filter the lists
-- Dashboard with charts (patients per doctor, conditions, trends over time)
-- Trend chart switches between daily, weekly and monthly views
+- Secure JWT login
+- Doctor CRUD: list, search, filter by specialization/hospital, pagination
+- Patient CRUD: list, search, filter by condition, assign to a doctor, pagination
+- Doctor detail page with its assigned patients
+- Dashboard: stat cards, patients-per-doctor bar chart, condition donut chart, and a patient trend area chart with daily/weekly/monthly toggles
 
 ## Tech
 
-- **App:** Next.js, shadcn/ui
-- **Server:** Express, MongoDB (Mongoose)
-- **Auth:** JWT
-- **Charts:** Recharts
-- **State:** Zustand
+- **Frontend:** Next.js, shadcn/ui, Zustand, Recharts, react-hook-form + Zod
+- **Backend:** Express, MongoDB (Mongoose), Zod, JWT
+- **API:** REST, paginated list endpoints returning `{ success, data, page, limit, total, totalPages }`
