@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import apiClient from "@/lib/api-client";
+import { apiErrorMessage } from "@/lib/api-error";
 import type {
   ApiResponse,
   DoctorDetail,
@@ -8,12 +9,6 @@ import type {
   Paginated,
   Patient,
 } from "@/types";
-
-function errorMessage(err: unknown, fallback: string): string {
-  const data = (err as { response?: { data?: { message?: string } } })
-    ?.response?.data;
-  return data?.message ?? fallback;
-}
 
 export const useDoctorDetailStore = create<DoctorDetailState>((set, get) => ({
   doctor: null,
@@ -34,7 +29,7 @@ export const useDoctorDetailStore = create<DoctorDetailState>((set, get) => ({
       );
       set({ doctor: data.data });
     } catch (err) {
-      set({ error: errorMessage(err, "Failed to load doctor") });
+      set({ error: apiErrorMessage(err, "Failed to load doctor") });
     } finally {
       set({ loading: false });
     }
@@ -49,14 +44,19 @@ export const useDoctorDetailStore = create<DoctorDetailState>((set, get) => ({
         `/doctors/${id}/patients`,
         { params: { page, limit } }
       );
+      const totalPages = Math.max(data.totalPages, 1);
       set({
         patients: data.data,
-        page,
+        page: Math.min(page, totalPages),
         total: data.total,
-        totalPages: data.totalPages,
+        totalPages,
       });
+      if (page > totalPages) {
+        get().setPage(id, totalPages);
+        return;
+      }
     } catch (err) {
-      set({ error: errorMessage(err, "Failed to load patients") });
+      set({ error: apiErrorMessage(err, "Failed to load patients") });
     } finally {
       set({ loadingPatients: false });
     }
